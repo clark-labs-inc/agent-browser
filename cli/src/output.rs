@@ -2118,6 +2118,7 @@ agent-browser get - Retrieve information from elements or page
 Usage: agent-browser get <subcommand> [args]
 
 Retrieves various types of information from elements or the page.
+Invalid selectors fail; matched elements may have empty text.
 
 Subcommands:
   text <selector>            Get text content of element

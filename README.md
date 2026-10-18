@@ -162,6 +162,8 @@ agent-browser get box <sel>           # Get bounding box
 agent-browser get styles <sel>        # Get computed styles
 ```
 
+Invalid selectors return an error instead of successful empty text. A matched element with no text still succeeds with an empty string.
+
 ### Read Agent-Friendly Text
 
 ```bash

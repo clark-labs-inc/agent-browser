@@ -879,7 +879,7 @@ fn tools() -> Vec<Value> {
             }),
             &[],
         ),
-        tool(TOOL_GET_TEXT, "Get text", "Get visible text from an element.", json!({ "selector": selector_schema() }), &["selector"]),
+        tool(TOOL_GET_TEXT, "Get text", "Get visible text from an element. Invalid selectors return an error; matched elements may have empty text.", json!({ "selector": selector_schema() }), &["selector"]),
         tool(TOOL_GET_HTML, "Get HTML", "Get innerHTML from an element.", json!({ "selector": selector_schema() }), &["selector"]),
         tool(TOOL_GET_VALUE, "Get value", "Get an input value.", json!({ "selector": selector_schema() }), &["selector"]),
         tool(TOOL_GET_URL, "Get URL", "Get the current page URL.", json!({}), &[]),
@@ -4365,3 +4365,7 @@ mod tests {
         assert_eq!(result["protocolVersion"], PROTOCOL_VERSION);
     }
 }
+
+#[cfg(test)]
+#[path = "mcp_selector_tests.rs"]
+mod selector_tests;
