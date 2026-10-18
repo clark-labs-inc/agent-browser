@@ -104,3 +104,18 @@ async fn exception_object_without_exception_details_is_not_an_element_handle() {
     assert!(result.unwrap_err().contains("SyntaxError: invalid selector"));
     assert_eq!(server.await.unwrap(), ["Runtime.evaluate"]);
 }
+
+#[tokio::test]
+async fn selector_exception_is_not_a_zero_element_count() {
+    let (client, server) = mock_client(selector_exception()).await;
+    let result = super::super::get_element_count(&client, "page", "[").await;
+    assert!(result.expect_err("An invalid selector is not a zero-match observation").contains("SyntaxError: invalid selector"));
+    assert_eq!(server.await.unwrap(), ["Runtime.evaluate"]);
+}
+
+#[tokio::test]
+async fn valid_selector_with_zero_matches_remains_a_zero_count() {
+    let (client, server) = mock_client(json!({"result":{"type":"number","value":0}})).await;
+    assert_eq!(super::super::get_element_count(&client, "page", "#missing").await.unwrap(), 0);
+    assert_eq!(server.await.unwrap(), ["Runtime.evaluate"]);
+}

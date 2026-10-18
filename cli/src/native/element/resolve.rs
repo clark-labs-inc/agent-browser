@@ -137,7 +137,7 @@ pub async fn resolve_element_object_id(
 /// A thrown DOM exception also has an objectId. Only use the evaluation's
 /// object handle after checking its exception receipt, otherwise getters read
 /// the exception object and turn a failed selector into successful empty data.
-fn checked_element_object_id(result: EvaluateResult, selector: &str) -> Result<String, String> {
+pub(super) fn checked_evaluation(result: EvaluateResult, selector: &str) -> Result<RemoteObject, String> {
     if let Some(details) = result.exception_details {
         let message = details.exception.and_then(|exception| exception.description)
             .unwrap_or(details.text);
@@ -147,7 +147,12 @@ fn checked_element_object_id(result: EvaluateResult, selector: &str) -> Result<S
         let message = result.result.description.as_deref().unwrap_or("JavaScript error");
         return Err(format!("Selector evaluation failed for {selector}: {message}"));
     }
-    result.result.object_id.ok_or_else(|| format!("Element not found: {selector}"))
+    Ok(result.result)
+}
+
+fn checked_element_object_id(result: EvaluateResult, selector: &str) -> Result<String, String> {
+    checked_evaluation(result, selector)?.object_id
+        .ok_or_else(|| format!("Element not found: {selector}"))
 }
 
 #[cfg(test)]
