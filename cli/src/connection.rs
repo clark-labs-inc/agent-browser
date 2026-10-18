@@ -1181,10 +1181,8 @@ mod tests {
         _guard.remove("XDG_RUNTIME_DIR");
 
         let result = get_socket_dir();
-        assert!(result.to_string_lossy().ends_with(".agent-browser"));
-        assert!(
-            result.to_string_lossy().contains("home") || result.to_string_lossy().contains("Users")
-        );
+        let expected = dirs::home_dir().expect("test account has a home directory").join(".agent-browser");
+        assert_eq!(result, expected);
     }
 
     #[test]
